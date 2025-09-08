@@ -39,6 +39,11 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    implementation("org.springframework.boot:spring-boot-starter-actuator") // 추가됨
+
+    implementation("org.springframework.boot:spring-boot-starter-data-redis") // 추가됨
+    implementation("org.springframework.session:spring-session-data-redis") // 추가됨
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")

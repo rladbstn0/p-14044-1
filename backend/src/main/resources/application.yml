@@ -1,6 +1,10 @@
 server:
   forward-headers-strategy: native
 spring:
+  autoconfigure: # 추가됨
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration # 운영환경이 아니라면 레디스 사용 안함
+      - org.springframework.boot.autoconfigure.session.SessionAutoConfiguration # 운영환경이 아니라면 세션 저장소 레디스 사용 안함
   application:
     name: back
   config:
@@ -68,7 +72,31 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
     com.back: DEBUG
+management: # 추가됨
+  endpoints:
+    web:
+      base-path: /actuator            # 기본값이지만 명시
+      exposure:
+        include: health,info          # 필요시 metrics 등 추가
+  endpoint:
+    health:
+      probes:
+        enabled: true                 # /actuator/health/{liveness,readiness} 활성화
+      show-details: never             # 프로브 용도면 never 권장(민감정보 차단)
 custom:
+  dev: # 추가됨
+    cookieDomain: localhost
+    frontUrl: "http://${custom.dev.cookieDomain}:3000"
+    backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
+  prod: # 추가됨
+    cookieDomain: p-14044-1.oa.gg
+    frontUrl: "https://www.${custom.prod.cookieDomain}"
+    backUrl: "https://api.${custom.prod.cookieDomain}"
+  site: # 추가됨
+    cookieDomain: "${custom.dev.cookieDomain}"
+    frontUrl: "${custom.dev.frontUrl}"
+    backUrl: "${custom.dev.backUrl}"
+    name: p-14044-1
   jwt:
     secretKey: ${CUSTOM__JWT__SECRET_KEY}
   accessToken:
