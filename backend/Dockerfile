@@ -24,6 +24,7 @@ FROM container-registry.oracle.com/graalvm/jdk:21
 # 작업 디렉토리 설정
 WORKDIR /app
 
+
 # 첫 번째 스테이지에서 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=builder /app/.env .env
