@@ -6,20 +6,14 @@ import com.back.domain.member.member.service.MemberService
 import com.back.global.exception.ServiceException
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
-import com.back.standard.extensions.getOrThrow
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import org.springframework.http.CacheControl
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
-import java.util.concurrent.TimeUnit
 
 
 @RestController
@@ -30,19 +24,6 @@ class ApiV1MemberController(
     private val memberService: MemberService,
     private val rq: Rq
 ) {
-    @GetMapping("/{id}/redirectToProfileImg")
-    @ResponseStatus(HttpStatus.FOUND)
-    fun redirectToProfileImg(@PathVariable id: Int, response: HttpServletResponse): String {
-        val member = memberService.findById(id).getOrThrow()
-
-        // 20분 캐시
-        val cc = CacheControl.maxAge(60 * 20, TimeUnit.SECONDS).cachePublic().immutable()
-        response.setHeader(HttpHeaders.CACHE_CONTROL, cc.headerValue)
-
-        return "redirect:${member.profileImgUrlOrDefault}"
-    }
-
-
     data class MemberJoinReqBody(
         @field:NotBlank @field:Size(min = 2, max = 30)
         val username: String,
@@ -134,7 +115,7 @@ class ApiV1MemberController(
     @Transactional(readOnly = true)
     @Operation(summary = "내 정보")
     fun me(): MemberWithUsernameDto {
-        val actor = rq.actor
+        val actor = rq.actorFromDb
 
         return MemberWithUsernameDto(actor)
     }

@@ -36,7 +36,6 @@ class SecurityConfig(
                 authorize("/api/*/members/login", permitAll)
                 authorize("/api/*/members/logout", permitAll)
                 authorize(HttpMethod.POST, "/api/*/members", permitAll)
-                authorize(HttpMethod.GET, "/api/*/members/{id:\\d+}/redirectToProfileImg", permitAll)
                 authorize("/api/*/adm/**", hasRole("ADMIN"))
                 authorize("/api/*/**", authenticated)
                 authorize(anyRequest, permitAll)

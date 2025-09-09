@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.context.ActiveProfiles
@@ -141,7 +140,7 @@ class ApiV1PostCommentControllerTest {
         val resultActions = mvc
             .perform(
                 delete("/api/v1/posts/$postId/comments/$id")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer $actorApiKey")
+                    .header("Authorization", "Bearer $actorApiKey")
             )
             .andDo(print())
 
@@ -194,7 +193,7 @@ class ApiV1PostCommentControllerTest {
         val resultActions = mvc
             .perform(
                 put("/api/v1/posts/$postId/comments/$id")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer $actorApiKey")
+                    .header("Authorization", "Bearer $actorApiKey")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
                         """

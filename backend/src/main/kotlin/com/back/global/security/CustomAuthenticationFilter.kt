@@ -9,7 +9,6 @@ import com.back.standard.util.Ut
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -28,10 +27,6 @@ class CustomAuthenticationFilter(
         "/api/v1/members/login",
         "/api/v1/members/logout",
         "/api/v1/members/join",
-    )
-
-    private val publicApiPatterns = listOf(
-        Regex("/api/v1/members/\\d+/redirectToProfileImg")
     )
 
     override fun doFilterInternal(
@@ -75,17 +70,15 @@ class CustomAuthenticationFilter(
     private fun isApiRequest(request: HttpServletRequest): Boolean =
         request.requestURI.startsWith("/api/")
 
-    private fun isPublicApi(request: HttpServletRequest): Boolean {
-        val uri = request.requestURI
-        return uri in publicApiPaths || publicApiPatterns.any { it.matches(uri) }
-    }
+    private fun isPublicApi(request: HttpServletRequest): Boolean =
+        request.requestURI in publicApiPaths
 
     private fun extractTokens(): Pair<String, String> {
-        val headerAuthorization = rq.getHeader(HttpHeaders.AUTHORIZATION, "")
+        val headerAuthorization = rq.getHeader("Authorization", "")
 
         return if (headerAuthorization.isNotBlank()) {
             if (!headerAuthorization.startsWith("Bearer "))
-                throw ServiceException("401-2", "${HttpHeaders.AUTHORIZATION} 헤더가 Bearer 형식이 아닙니다.")
+                throw ServiceException("401-2", "Authorization 헤더가 Bearer 형식이 아닙니다.")
             val bits = headerAuthorization.split(" ", limit = 3)
             bits.getOrNull(1).orEmpty() to bits.getOrNull(2).orEmpty()
         } else {
@@ -118,7 +111,7 @@ class CustomAuthenticationFilter(
         val newToken = memberService.genAccessToken(member)
 
         rq.setCookie("accessToken", newToken)
-        rq.setHeader(HttpHeaders.AUTHORIZATION, newToken)
+        rq.setHeader("Authorization", newToken)
     }
 
     private fun authenticate(member: Member) {

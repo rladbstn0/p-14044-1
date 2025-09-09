@@ -40,7 +40,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    @DisplayName("findQPagedByKw, kwType=PostSearchKeywordType1.AUTHOR_NICKNAME")
+    @DisplayName("findQPagedByKw, kwType=PostSearchKeywordType1.AUTHOR_NAME")
     fun t2() {
         val postPage = postRepository.findQPagedByKw(
             PostSearchKeywordType1.AUTHOR_NAME,

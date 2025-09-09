@@ -1,7 +1,6 @@
 package com.back.domain.post.post.controller
 
 import com.back.domain.post.post.service.PostService
-import com.back.global.rq.Rq
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,12 +14,8 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "ApiV1AdmPostController", description = "관리자용 API 글 컨트롤러")
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1AdmPostController(
-    private val postService: PostService,
-    private val rq: Rq,
+    private val postService: PostService
 ) {
-    private val actor
-        get() = rq.postActor
-
     data class AdmPostCountResBody(
         val all: Long
     )
@@ -29,8 +24,6 @@ class ApiV1AdmPostController(
     @Transactional(readOnly = true)
     @Operation(summary = "전체 글 개수")
     fun count(): AdmPostCountResBody {
-        actor.createDate
-
         return AdmPostCountResBody(
             postService.count()
         )

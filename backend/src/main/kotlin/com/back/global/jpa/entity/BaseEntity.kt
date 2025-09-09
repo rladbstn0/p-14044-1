@@ -8,8 +8,8 @@ import java.util.*
 
 @MappedSuperclass
 abstract class BaseEntity(
-    @field:Id
-    @field:GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int = 0
 ) {
     override fun equals(other: Any?): Boolean {

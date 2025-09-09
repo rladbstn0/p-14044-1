@@ -1,6 +1,5 @@
 package com.back.domain.member.member.entity
 
-import com.back.global.jpa.entity.BaseEntity
 import com.back.global.jpa.entity.BaseTime
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
@@ -9,21 +8,11 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 @MappedSuperclass
-class BaseMember(
+abstract class BaseMember(
     id: Int,
-    @field:NaturalId @field:Column(unique = true) val username: String,
+    @NaturalId @field:Column(unique = true) val username: String,
     var profileImgUrl: String? = null,
 ) : BaseTime(id) {
-    override fun equals(other: Any?): Boolean {
-        if (other === this) return true
-        if (other == null || other !is BaseMember) return false
-        val that = other as BaseEntity
-        return id == that.id
-    }
-
-    val redirectToProfileImgUrlOrDefault: String
-        get() = "/api/v1/members/${id}/redirectToProfileImg"
-
     val profileImgUrlOrDefault: String
         get() {
             profileImgUrl?.let { return it }
@@ -50,4 +39,6 @@ class BaseMember(
 
     val authorities: Collection<GrantedAuthority>
         get() = authoritiesAsStringList.map { SimpleGrantedAuthority(it) }
+
+    abstract val name: String
 }

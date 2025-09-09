@@ -13,8 +13,9 @@ import org.springframework.data.support.PageableExecutionUtils
 
 class MemberRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
-    private val entityManager: EntityManager,
+    private val entityManager: EntityManager
 ) : MemberRepositoryCustom {
+
     override fun findByUsername(username: String): Member? {
         return entityManager.unwrap(Session::class.java)
             .byNaturalId(Member::class.java)

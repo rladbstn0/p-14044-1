@@ -1,10 +1,11 @@
 server:
+  port: 8080
   forward-headers-strategy: native
 spring:
-  autoconfigure: # 추가됨
+  autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration # 운영환경이 아니라면 레디스 사용 안함
-      - org.springframework.boot.autoconfigure.session.SessionAutoConfiguration # 운영환경이 아니라면 세션 저장소 레디스 사용 안함
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
   application:
     name: back
   config:
@@ -30,6 +31,7 @@ spring:
         highlight_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 100
+    open-in-view: false
   security:
     oauth2:
       client:
@@ -72,7 +74,7 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
     com.back: DEBUG
-management: # 추가됨
+management:
   endpoints:
     web:
       base-path: /actuator            # 기본값이지만 명시
@@ -84,15 +86,15 @@ management: # 추가됨
         enabled: true                 # /actuator/health/{liveness,readiness} 활성화
       show-details: never             # 프로브 용도면 never 권장(민감정보 차단)
 custom:
-  dev: # 추가됨
+  dev:
     cookieDomain: localhost
     frontUrl: "http://${custom.dev.cookieDomain}:3000"
     backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
-  prod: # 추가됨
-    cookieDomain: p-14044-1.oa.gg
+  prod:
+    cookieDomain: p-14044-1.wvvv.store
     frontUrl: "https://www.${custom.prod.cookieDomain}"
     backUrl: "https://api.${custom.prod.cookieDomain}"
-  site: # 추가됨
+  site:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"

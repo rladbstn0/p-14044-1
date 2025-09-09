@@ -88,8 +88,4 @@ class MemberService(
                 sort.sortBy
             )
         )
-
-    fun getReferenceById(id: Int): Member {
-        return memberRepository.getReferenceById(id)
-    }
 }

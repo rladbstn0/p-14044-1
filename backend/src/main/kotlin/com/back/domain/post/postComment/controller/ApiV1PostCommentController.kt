@@ -2,7 +2,7 @@ package com.back.domain.post.postComment.controller
 
 import com.back.domain.post.post.service.PostService
 import com.back.domain.post.postComment.dto.PostCommentDto
-import com.back.domain.post.postUser.service.PostUserService
+import com.back.domain.post.postUser.entity.PostUser
 import com.back.global.rq.Rq
 import com.back.global.rsData.RsData
 import com.back.standard.extensions.getOrThrow
@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.*
 @SecurityRequirement(name = "bearerAuth")
 class ApiV1PostCommentController(
     private val postService: PostService,
-    private val rq: Rq,
-    private val postUserService: PostUserService
+    private val rq: Rq
 ) {
-    val actor
-        get() = rq.postActor
+    val actor: PostUser
+        get() = PostUser(rq.actor)
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -67,7 +66,7 @@ class ApiV1PostCommentController(
 
         postComment.checkActorCanDelete(actor)
 
-        postService.deleteComment(post, postComment)
+        post.deleteComment(postComment)
 
         return RsData(
             "200-1",
@@ -95,7 +94,7 @@ class ApiV1PostCommentController(
 
         postComment.checkActorCanModify(actor)
 
-        postService.modifyComment(postComment, reqBody.content)
+        postComment.modify(reqBody.content)
 
         return RsData(
             "200-1",
@@ -118,7 +117,9 @@ class ApiV1PostCommentController(
     ): RsData<PostCommentDto> {
         val post = postService.findById(postId).getOrThrow()
 
-        val postComment = postService.writeComment(actor, post, reqBody.content)
+        val postComment = post.addComment(actor, reqBody.content)
+
+        postService.flush()
 
         return RsData(
             "201-1",

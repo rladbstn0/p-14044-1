@@ -4,5 +4,4 @@ import com.back.domain.member.memberLog.entity.MemberLog
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberLogRepository : JpaRepository<MemberLog, Int> {
-
 }

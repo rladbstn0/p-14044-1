@@ -1,6 +1,6 @@
 package com.back.domain.member.member.dto
 
-import com.back.domain.member.member.entity.Member
+import com.back.domain.member.member.entity.BaseMember
 import java.time.LocalDateTime
 
 data class MemberDto(
@@ -11,12 +11,12 @@ data class MemberDto(
     val name: String,
     val profileImageUrl: String,
 ) {
-    constructor(member: Member) : this(
+    constructor(member: BaseMember) : this(
         member.id,
         member.createDate,
         member.modifyDate,
         member.isAdmin,
         member.name,
-        member.redirectToProfileImgUrlOrDefault
+        member.profileImgUrlOrDefault
     )
 }

@@ -1,13 +1,10 @@
 package com.back.global.rq
 
 import com.back.domain.member.member.entity.Member
-import com.back.domain.member.member.entity.MemberProxy
 import com.back.domain.member.member.service.MemberService
-import com.back.domain.post.postUser.entity.PostUser
-import com.back.domain.post.postUser.entity.PostUserProxy
-import com.back.domain.post.postUser.service.PostUserService
 import com.back.global.app.AppConfig
 import com.back.global.security.SecurityUser
+import com.back.standard.extensions.getOrThrow
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -19,7 +16,6 @@ class Rq(
     private val req: HttpServletRequest,
     private val resp: HttpServletResponse,
     private val memberService: MemberService,
-    private val postUserService: PostUserService,
 ) {
     val actor: Member
         get() = SecurityContextHolder
@@ -28,36 +24,15 @@ class Rq(
             ?.principal
             ?.let {
                 if (it is SecurityUser) {
-                    MemberProxy(
-                        it.id,
-                        it.username,
-                        it.nickname,
-                        memberService.getReferenceById(it.id)
-                    )
+                    Member(it.id, it.username, it.nickname)
                 } else {
                     null
                 }
             }
             ?: throw IllegalStateException("인증된 사용자가 없습니다.")
 
-    val postActor: PostUser
-        get() = SecurityContextHolder
-            .getContext()
-            ?.authentication
-            ?.principal
-            ?.let {
-                if (it is SecurityUser) {
-                    PostUserProxy(
-                        it.id,
-                        it.username,
-                        it.nickname,
-                        postUserService.getReferenceById(it.id)
-                    )
-                } else {
-                    null
-                }
-            }
-            ?: throw IllegalStateException("인증된 사용자가 없습니다.")
+    val actorFromDb: Member
+        get() = memberService.findById(actor.id).getOrThrow()
 
     fun getHeader(name: String, defaultValue: String): String {
         return req.getHeader(name) ?: defaultValue

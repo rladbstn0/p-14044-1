@@ -68,18 +68,18 @@ class NotProdInitData(
     fun work2() {
         if (postService.count() > 0) return
 
-        val postUser1 = postUserService.findByUsername("user1").getOrThrow()
-        val postUser2 = postUserService.findByUsername("user2").getOrThrow()
-        val postUser3 = postUserService.findByUsername("user3").getOrThrow()
+        val memberUser1 = postUserService.findByUsername("user1").getOrThrow()
+        val memberUser2 = postUserService.findByUsername("user2").getOrThrow()
+        val memberUser3 = postUserService.findByUsername("user3").getOrThrow()
 
-        val post1 = postService.write(postUser1, "제목 1", "내용 1")
-        val post2 = postService.write(postUser1, "제목 2", "내용 2")
-        val post3 = postService.write(postUser2, "제목 3", "내용 3")
+        val post1 = postService.write(memberUser1, "제목 1", "내용 1")
+        val post2 = postService.write(memberUser1, "제목 2", "내용 2")
+        val post3 = postService.write(memberUser2, "제목 3", "내용 3")
 
-        postService.writeComment(postUser1, post1, "댓글 1-1")
-        postService.writeComment(postUser1, post1, "댓글 1-2")
-        postService.writeComment(postUser2, post1, "댓글 1-3")
-        postService.writeComment(postUser3, post2, "댓글 2-1")
-        postService.writeComment(postUser3, post2, "댓글 2-2")
+        postService.writeComment(memberUser1, post1, "댓글 1-1")
+        postService.writeComment(memberUser1, post1, "댓글 1-2")
+        postService.writeComment(memberUser2, post1, "댓글 1-3")
+        postService.writeComment(memberUser3, post2, "댓글 2-1")
+        postService.writeComment(memberUser3, post2, "댓글 2-2")
     }
 }
